@@ -24,4 +24,12 @@ class MenuHarian extends Model
     {
         return $this->hasMany(ProdukMenu::class);
     }
+
+    protected static function booted()
+    {
+        static::deleting(function ($menuHarian) {
+            $menuHarian->produkMenus()->delete();
+        });
+    }
+
 }

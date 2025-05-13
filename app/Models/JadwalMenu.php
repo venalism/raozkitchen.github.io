@@ -26,4 +26,14 @@ class JadwalMenu extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    protected static function booted()
+    {
+        static::deleting(function ($jadwalMenu) {
+            foreach ($jadwalMenu->menuHarians as $menuHarian) {
+                $menuHarian->produkMenus()->delete();
+            }
+            $jadwalMenu->menuHarians()->delete();
+        });
+    }
 }

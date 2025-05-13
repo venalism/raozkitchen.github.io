@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
@@ -26,30 +29,47 @@ class JadwalMenuResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                TextInput::make('nama_jadwal')
-                    ->required()
-                    ->maxLength(255)
-                    ->label('Nama Jadwal Menu'),
-
-                DatePicker::make('tanggal_mulai')
-                    ->required()
-                    ->label('Tanggal Mulai'),
-
-                DatePicker::make('tanggal_selesai')
-                    ->required()
-                    ->after('tanggal_mulai')
-                    ->label('Tanggal Selesai'),
-                
-                FileUpload::make('poster_url')
-                    ->label('Poster Menu Mingguan')
-                    ->directory('posters')
-                    ->image()
-                    ->imagePreviewHeight('150')
-                    ->hint('Upload gambar .jpg atau .png')
-                    ->required(false),
-            ]);
-    }
+        ->schema([
+            TextInput::make('nama_jadwal')->required(),
+            DatePicker::make('tanggal_mulai')->required(),
+            DatePicker::make('tanggal_selesai')->required(),
+    
+            FileUpload::make('poster_url')
+                ->label('Upload Poster')
+                ->directory('posters')
+                ->image()
+                ->hint('Boleh diupload untuk pemindaian OCR (opsional)'),
+    
+            Repeater::make('menuHarians')
+                ->relationship()
+                ->label('Menu Harian')
+                ->schema([
+                    TextInput::make('hari')->required(),
+                    DatePicker::make('tanggal')->required(),
+    
+                    Repeater::make('produkMenus')
+                        ->relationship()
+                        ->label('Produk Menu')
+                        ->schema([
+                            Select::make('produk_id')
+                                ->relationship('produk', 'nama_produk')
+                                ->searchable()
+                                ->preload()
+                                ->label('Produk')
+                                ->createOptionForm([
+                                    TextInput::make('nama_produk')->required(),
+                                    TextInput::make('satuan')->required(),
+                                    TextInput::make('harga_default')->numeric()->required(),
+                                    Textarea::make('keterangan'),
+                                    TextInput::make('jumlah_standar_unit')->numeric()->default(1),
+                                ]),
+    
+                            TextInput::make('harga_menu')->numeric()->required(),
+                            Textarea::make('keterangan_tambahan'),
+                        ])
+                ])
+        ]);
+    }    
 
     public static function table(Table $table): Table
     {
