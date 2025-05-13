@@ -2,6 +2,10 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use App\Filament\Resources\ProdukMenuResource\Pages;
 use App\Filament\Resources\ProdukMenuResource\RelationManagers;
 use App\Models\ProdukMenu;
@@ -23,7 +27,23 @@ class ProdukMenuResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Select::make('menu_harian_id')
+                ->relationship('menuHarian', 'tanggal')
+                ->label('Menu Harian (Tanggal)')
+                ->required(),
+
+                Select::make('produk_id')
+                    ->relationship('produk', 'nama_produk')
+                    ->label('Produk')
+                    ->required(),
+
+                TextInput::make('harga_menu')
+                    ->numeric()
+                    ->required()
+                    ->label('Harga Spesial Hari Itu'),
+
+                Textarea::make('keterangan_tambahan')
+                    ->label('Catatan Tambahan (opsional)'),
             ]);
     }
 
@@ -31,7 +51,12 @@ class ProdukMenuResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('id'),
+                TextColumn::make('menuHarian.hari')->label('Hari'),
+                TextColumn::make('menuHarian.tanggal')->label('Tanggal'),
+                TextColumn::make('produk.nama_produk')->label('Nama Produk'),
+                TextColumn::make('harga_menu')->label('Harga')->money('IDR', true),
+                TextColumn::make('keterangan_tambahan')->limit(30),
             ])
             ->filters([
                 //

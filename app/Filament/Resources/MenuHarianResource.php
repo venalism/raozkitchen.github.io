@@ -2,6 +2,10 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\TextInput;
 use App\Filament\Resources\MenuHarianResource\Pages;
 use App\Filament\Resources\MenuHarianResource\RelationManagers;
 use App\Models\MenuHarian;
@@ -23,7 +27,18 @@ class MenuHarianResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Select::make('jadwal_menu_id')
+                ->relationship('jadwalMenu', 'nama_jadwal')
+                ->required()
+                ->label('Jadwal Menu'),
+
+                TextInput::make('hari')
+                    ->required()
+                    ->label('Hari (ex: Senin, Selasa, dll)'),
+
+                DatePicker::make('tanggal')
+                    ->required()
+                    ->label('Tanggal'),
             ]);
     }
 
@@ -31,7 +46,10 @@ class MenuHarianResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('id'),
+                TextColumn::make('jadwalMenu.nama_jadwal')->label('Jadwal'),
+                TextColumn::make('hari'),
+                TextColumn::make('tanggal')->label('tanggal')->date(),
             ])
             ->filters([
                 //

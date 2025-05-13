@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
 use App\Filament\Resources\JadwalMenuResource\Pages;
 use App\Filament\Resources\JadwalMenuResource\RelationManagers;
 use App\Models\JadwalMenu;
@@ -23,7 +26,19 @@ class JadwalMenuResource extends Resource
     {
         return $form
             ->schema([
-                //
+                TextInput::make('nama_jadwal')
+                ->required()
+                ->maxLength(255)
+                ->label('Nama Jadwal Menu'),
+
+                DatePicker::make('tanggal_mulai')
+                    ->required()
+                    ->label('Tanggal Mulai'),
+
+                DatePicker::make('tanggal_selesai')
+                    ->required()
+                    ->after('tanggal_mulai')
+                    ->label('Tanggal Selesai'),
             ]);
     }
 
@@ -31,7 +46,11 @@ class JadwalMenuResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('id'),
+                TextColumn::make('nama_jadwal')->searchable(),
+                TextColumn::make('tanggal_mulai')->label('Tanggal Mulai')->date(),
+                TextColumn::make('tanggal_selesai')->label('Tanggal Selesai')->date(),
+                TextColumn::make('user.name')->label('Dibuat oleh'),
             ])
             ->filters([
                 //
