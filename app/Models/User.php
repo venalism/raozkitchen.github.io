@@ -12,6 +12,11 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    public function jadwalMenus()
+    {
+        return $this->hasMany(JadwalMenu::class, 'created_by');
+    }
+
     /**
      * The attributes that are mass assignable.
      *
