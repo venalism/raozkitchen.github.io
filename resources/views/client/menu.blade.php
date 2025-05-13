@@ -11,68 +11,61 @@
         </div>
         
         <!-- Menu Mingguan Section -->
+        <!-- Menu Mingguan Section -->
         <section class="mb-12">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-2xl font-bold text-gray-800">Batch Mingguan</h2>
             </div>
-            
+
             <div class="bg-orange-50 rounded-xl overflow-hidden shadow-md">
                 <div class="grid md:grid-cols-2">
                     <div class="p-6 md:p-8">
-                        <h3 class="text-2xl font-bold text-gray-800 mb-3">Menu minggu ini</h3>
-                        <p class="text-gray-700 mb-4">Nikmati kelezatan masakan rumahan kami. Kami menghadirkan berbagai menu yang bervariatif setiap minggu.</p>
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-2xl font-bold text-orange-600">Pesan Sekarang!</p>
-                            </div>
-                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-3">{{ $jadwal->nama_jadwal }}</h3>
+                        <p class="text-gray-700 mb-2">
+                            Jadwal: {{ \Carbon\Carbon::parse($jadwal->tanggal_mulai)->translatedFormat('d M') }}
+                            – {{ \Carbon\Carbon::parse($jadwal->tanggal_selesai)->translatedFormat('d M Y') }}
+                        </p>
+                        <p class="text-gray-600 mb-4">Silakan cek menu harian di bawah untuk melihat detail lengkapnya.</p>
                     </div>
                     <div class="bg-gray-200 h-64 md:h-auto">
-                        <img src="/api/placeholder/600/400" alt="Menu Mingguan" class="w-full h-full object-cover">
+                        <img src="{{ asset('storage/' . $jadwal->poster_url) }}" alt="Poster Menu Mingguan" class="w-full h-full object-cover">
                     </div>
                 </div>
             </div>
         </section>
-        
+     
         <!-- Menu Harian Section -->
         <section>
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-2xl font-bold text-gray-800">Menu Harian</h2>
             </div>
             
-            <!-- Menu Categories Tabs -->
-            <div class="mb-6">
-                <div class="flex flex-wrap border-b border-gray-200">
-                    <button class="text-gray-700 hover:text-orange-600 px-4 py-2 font-medium">Senin</button>
-                    <button class="text-gray-700 hover:text-orange-600 px-4 py-2 font-medium">Selasa</button>
-                    <button class="text-gray-700 hover:text-orange-600 px-4 py-2 font-medium">Rabu</button>
-                    <button class="text-gray-700 hover:text-orange-600 px-4 py-2 font-medium">Kamis</button>
-                    <button class="text-gray-700 hover:text-orange-600 px-4 py-2 font-medium">Jumat</button>
-                    <button class="text-gray-700 hover:text-orange-600 px-4 py-2 font-medium">Sabtu</button>
-                    <button class="text-gray-700 hover:text-orange-600 px-4 py-2 font-medium">Minggu</button>
-                </div>
-            </div>
-            
-            <!-- Menu Items Grid - Will be connected to database -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-                <!-- Menu Item -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
-                    <div class="h-48 bg-gray-200">
-                        <img src="/api/placeholder/400/300" alt="Nasi Ayam Goreng" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-4">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="font-bold text-gray-800">Nasi Ayam Goreng</h3>
-                            <span class="bg-green-100 text-green-600 text-xs px-2 py-1 rounded-full">Menu Utama</span>
+            @foreach($jadwal->menuHarians as $menu)
+                <h3 class="text-xl font-semibold text-gray-800 mt-8 mb-4">{{ $menu->hari }}, {{ \Carbon\Carbon::parse($menu->tanggal)->translatedFormat('d M Y') }}</h3>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+                    @foreach($menu->produkMenus as $item)
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+                            <div class="h-48 bg-gray-200">
+                                <img src="/api/placeholder/400/300" alt="{{ $item->produk->nama_produk }}" class="w-full h-full object-cover">
+                            </div>
+                            <div class="p-4">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="font-bold text-gray-800">{{ $item->produk->nama_produk }}</h3>
+                                    <span class="bg-green-100 text-green-600 text-xs px-2 py-1 rounded-full">Menu Utama</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-4">
+                                    {{ $item->produk->keterangan ?? '-' }}
+                                </p>
+                                <div class="flex items-center justify-between">
+                                    <p class="font-bold text-orange-600">Rp {{ number_format($item->harga_menu, 0, ',', '.') }}</p>
+                                </div>
+                            </div>
                         </div>
-                        <p class="text-gray-600 text-sm mb-4">Nasi putih dengan ayam goreng renyah, sambal, dan lalapan segar.</p>
-                        <div class="flex items-center justify-between">
-                            <p class="font-bold text-orange-600">Rp 25.000</p>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
-            </div>
-        
+            @endforeach
+                    
         <!-- How to Order Section -->
         <section class="mt-16 bg-gray-50 rounded-xl p-8">
             <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Cara Pemesanan</h2>

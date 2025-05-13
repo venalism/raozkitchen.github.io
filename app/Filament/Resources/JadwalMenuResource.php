@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
@@ -27,9 +28,9 @@ class JadwalMenuResource extends Resource
         return $form
             ->schema([
                 TextInput::make('nama_jadwal')
-                ->required()
-                ->maxLength(255)
-                ->label('Nama Jadwal Menu'),
+                    ->required()
+                    ->maxLength(255)
+                    ->label('Nama Jadwal Menu'),
 
                 DatePicker::make('tanggal_mulai')
                     ->required()
@@ -39,6 +40,14 @@ class JadwalMenuResource extends Resource
                     ->required()
                     ->after('tanggal_mulai')
                     ->label('Tanggal Selesai'),
+                
+                FileUpload::make('poster_url')
+                    ->label('Poster Menu Mingguan')
+                    ->directory('posters')
+                    ->image()
+                    ->imagePreviewHeight('150')
+                    ->hint('Upload gambar .jpg atau .png')
+                    ->required(false),
             ]);
     }
 

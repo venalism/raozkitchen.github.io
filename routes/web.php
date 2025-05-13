@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MenuKateringController;
 
 // Landing Page
 Route::get('/', function () {
@@ -16,3 +17,5 @@ Route::get('/menu', function () {
 Route::get('/about', function () {
     return view('client.about');
 })->name('about');
+
+Route::get('/menu', [MenuKateringController::class, 'index'])->name('menu');

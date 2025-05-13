@@ -13,6 +13,7 @@ class JadwalMenu extends Model
         'nama_jadwal',
         'tanggal_mulai',
         'tanggal_selesai',
+        'poster_url',
         'created_by',
     ];
 
